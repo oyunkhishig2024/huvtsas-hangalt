@@ -24,7 +24,7 @@ import {
   WarehouseLocationType
 } from '../types';
 import { INITIAL_UNIFORM_CATALOG, DEPARTMENTS_DATA, COMMANDS_DATA, RANKS_DATA } from '../data/uniformCatalogData';
-import { seedHqHoldings, seedInitialSupplyRequests } from '../data/supplyChainSeed';
+import { seedHqHoldings, seedUnit310Holdings, seedInitialSupplyRequests } from '../data/supplyChainSeed';
 import { 
   INITIAL_PERSONNEL, 
   INITIAL_DISTRIBUTIONS, 
@@ -185,7 +185,7 @@ export const UniformProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [stockHoldings, setStockHoldings] = useState<StockHolding[]>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.STOCK_HOLDINGS);
-    return saved ? JSON.parse(saved) : seedHqHoldings();
+    return saved ? JSON.parse(saved) : [...seedHqHoldings(), ...seedUnit310Holdings()];
   });
 
   const [supplyTransfers, setSupplyTransfers] = useState<SupplyTransfer[]>(() => {
@@ -1178,7 +1178,7 @@ export const UniformProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setExchanges(INITIAL_EXCHANGES);
     setAuditLogs(INITIAL_AUDIT_LOGS);
     setSession(DEFAULT_SESSION);
-    setStockHoldings(seedHqHoldings());
+    setStockHoldings([...seedHqHoldings(), ...seedUnit310Holdings()]);
     setSupplyTransfers([]);
     setSupplyRequests(seedInitialSupplyRequests());
   };

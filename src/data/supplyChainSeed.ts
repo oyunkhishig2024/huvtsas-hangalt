@@ -23,6 +23,28 @@ export function seedHqHoldings(): StockHolding[] {
   return holdings;
 }
 
+// 310-р анги is seeded as an already well-stocked unit warehouse (as if past
+// transfers from ЗХЖШ had already been received and logged), so its Агуулах
+// tab reads as a real, populated warehouse rather than the empty shell every
+// other Анги starts from.
+export function seedUnit310Holdings(): StockHolding[] {
+  const holdings: StockHolding[] = [];
+  INITIAL_UNIFORM_CATALOG.forEach((item) => {
+    Object.entries(item.sizeStock).forEach(([size, hqQty], idx) => {
+      const quantity = Math.max(6, Math.round(hqQty * 0.22) + (idx % 3) * 4);
+      holdings.push({
+        id: `hold-dept-310-${item.id}-${size}`,
+        uniformId: item.id,
+        size,
+        locationType: 'unit',
+        locationId: 'dept-310',
+        quantity
+      });
+    });
+  });
+  return holdings;
+}
+
 // One sample pending request so the ЗХЖШ "incoming requests" screen isn't empty on first load.
 export function seedInitialSupplyRequests(): SupplyRequest[] {
   const sampleItem = INITIAL_UNIFORM_CATALOG[0];

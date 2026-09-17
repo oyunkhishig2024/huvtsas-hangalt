@@ -241,6 +241,12 @@ export const DEPARTMENTS_DATA: Department[] = [
   ...hqDirectUnits
 ];
 
+// 310-р анги carries a full generated personnel roster (see
+// mockPersonnelAndDistributions.ts) — keep its displayed headcount in
+// sync with the actual number of seeded Personnel records.
+const dept310 = DEPARTMENTS_DATA.find((d) => d.id === 'dept-310');
+if (dept310) dept310.personnelCount = 200;
+
 export const RANKS_DATA: Rank[] = [
   // Senior Officers
   { id: 'rk-gen-army', nameMn: 'Хурандаа генерал', nameEn: 'Colonel General', category: 'Senior Officer', level: 1 },

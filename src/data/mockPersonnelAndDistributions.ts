@@ -891,3 +891,394 @@ export const INITIAL_AUDIT_LOGS: AuditLog[] = [
     details: 'Зэвсэгт хүчний 084 дугаар ангийн жигдрэлтийн гүйцэтгэлийн тайланг хянаж экспортолсон.'
   }
 ];
+
+/* ------------------------------------------------------------------ */
+/* 310-р анги (dept-310) — a full generated roster so this unit reads  */
+/* as a genuinely populated Анги (~200 personnel, warehouse activity,  */
+/* exchanges, cash-equivalent issuances) instead of an empty shell.    */
+/* ------------------------------------------------------------------ */
+
+const DEPT_310_ID = 'dept-310';
+const DEPT_310_NAME = 'Зэвсэгт хүчний 310 дугаар анги';
+const U310_SUPPLY_OFFICER = 'Хошууч С.Хонгор (Ангийн хангамжийн офицер)';
+
+const U310_FATHER_MN = [
+  'Баярсайханы', 'Ганболдын', 'Төмөрбаатарын', 'Чинбатын', 'Ганбаатарын',
+  'Долгорсүрэнгийн', 'Батжаргалын', 'Нямдоржийн', 'Отгонбаярын', 'Мөнхбаярын',
+  'Цэрэндоржийн', 'Эрдэнэбаярын', 'Сүхбаатарын', 'Жамбалын', 'Пүрэвжавын',
+  'Даш-Ундрахын', 'Ганзоригийн', 'Болдбаатарын', 'Түвшинжаргалын', 'Алтанхуягийн'
+];
+const U310_FATHER_EN = [
+  'Bayarsaikhan', 'Ganbold', 'Tumurbaatar', 'Chinbat', 'Ganbaatar',
+  'Dolgorsuren', 'Batjargal', 'Nyamdorj', 'Otgonbayar', 'Munkhbayar',
+  'Tserendorj', 'Erdenebayar', 'Sukhbaatar', 'Jambal', 'Purevjav',
+  'Dash-Undrakh', 'Ganzorig', 'Boldbaatar', 'Tuvshinjargal', 'Altankhuyag'
+];
+const U310_GIVEN_MALE_MN = [
+  'Бат-Эрдэнэ', 'Төгөлдөр', 'Амарсанаа', 'Батсайхан', 'Ганзориг', 'Эрдэнэбат',
+  'Мөнхбат', 'Түвшинбаяр', 'Ганбаяр', 'Наранбаатар', 'Отгонбаяр', 'Ганхуяг',
+  'Батбаяр', 'Энхбат', 'Золбоо', 'Ууганбаяр', 'Ганболд', 'Нямбаяр', 'Батжаргал', 'Алтангэрэл'
+];
+const U310_GIVEN_MALE_EN = [
+  'Bat-Erdene', 'Tuguldur', 'Amarsanaa', 'Batsaikhan', 'Ganzorig', 'Erdenebat',
+  'Munkhbat', 'Tuvshinbayar', 'Ganbayar', 'Naranbaatar', 'Otgonbayar', 'Ganhuyag',
+  'Batbayar', 'Enkhbat', 'Zolboo', 'Uuganbayar', 'Ganbold', 'Nyambayar', 'Batjargal', 'Altangerel'
+];
+const U310_GIVEN_FEMALE_MN = [
+  'Энхжин', 'Ариунаа', 'Оюунчимэг', 'Сарангэрэл', 'Нандинцэцэг', 'Мөнхцэцэг',
+  'Болормаа', 'Отгонжаргал', 'Цэрэнханд', 'Сарнай', 'Ундрахжаргал', 'Нарантуяа',
+  'Батцэцэг', 'Алтанцэцэг', 'Гантуяа', 'Дэлгэрмаа', 'Хулан', 'Уянга', 'Наранцэцэг', 'Энхтуяа'
+];
+const U310_GIVEN_FEMALE_EN = [
+  'Enkhjin', 'Ariunaa', 'Oyunchimeg', 'Sarangerel', 'Nandintsetseg', 'Munkhtsetseg',
+  'Bolormaa', 'Otgonjargal', 'Tserenkhand', 'Sarnai', 'Undrakhjargal', 'Narantuya',
+  'Batsetseg', 'Altantsetseg', 'Gantuya', 'Delgermaa', 'Khulan', 'Uyanga', 'Narantsetseg', 'Enkhtuya'
+];
+
+interface U310RankSlot {
+  rankId: string;
+  rankName: string;
+  rankCategory: Personnel['rankCategory'];
+  serviceType?: 'Conscript' | 'Contract';
+}
+
+const U310_OFFICER_RANKS: U310RankSlot[] = [
+  { rankId: 'rk-capt', rankName: 'Ахмад', rankCategory: 'Officer' },
+  { rankId: 'rk-sr-lt', rankName: 'Ахлах дэслэгч', rankCategory: 'Officer' },
+  { rankId: 'rk-lt', rankName: 'Дэслэгч', rankCategory: 'Officer' },
+  { rankId: 'rk-lt-col', rankName: 'Дэд хурандаа', rankCategory: 'Officer' }
+];
+const U310_SERGEANT_RANKS: U310RankSlot[] = [
+  { rankId: 'rk-wo-1', rankName: 'Тэргүүн ахлагч', rankCategory: 'Sergeant' },
+  { rankId: 'rk-wo-2', rankName: 'Сургагч ахлагч', rankCategory: 'Sergeant' },
+  { rankId: 'rk-wo-3', rankName: 'Ахлах ахлагч', rankCategory: 'Sergeant' },
+  { rankId: 'rk-wo-4', rankName: 'Ахлагч', rankCategory: 'Sergeant' },
+  { rankId: 'rk-wo-5', rankName: 'Дэд ахлагч', rankCategory: 'Sergeant' }
+];
+const U310_CONSCRIPT_RANKS: U310RankSlot[] = [
+  { rankId: 'rk-con-1', rankName: 'Ахлах түрүүч', rankCategory: 'Conscript', serviceType: 'Conscript' },
+  { rankId: 'rk-con-2', rankName: 'Түрүүч', rankCategory: 'Conscript', serviceType: 'Conscript' },
+  { rankId: 'rk-con-3', rankName: 'Дэд түрүүч', rankCategory: 'Conscript', serviceType: 'Conscript' },
+  { rankId: 'rk-con-4', rankName: 'Ахлах байлдагч', rankCategory: 'Conscript', serviceType: 'Conscript' },
+  { rankId: 'rk-con-5', rankName: 'Байлдагч', rankCategory: 'Conscript', serviceType: 'Conscript' },
+  { rankId: 'rk-con-2', rankName: 'Түрүүч', rankCategory: 'Conscript', serviceType: 'Contract' },
+  { rankId: 'rk-con-1', rankName: 'Ахлах түрүүч', rankCategory: 'Conscript', serviceType: 'Contract' }
+];
+
+const U310_OFFICER_ITEMS = [
+  { uniformId: 'uni-2-14', modelCode: '2-14, 2-15', nameMn: 'Офицер, ахлагчийн албаны китель, өмд (эрэгтэй)', nameEn: 'Officer Service Tunic & Trousers', category: 'Outerwear' as const, sizes: ['46-3', '48-3', '48-4', '50-3', '50-4', '52-4'] },
+  { uniformId: 'uni-2-1', modelCode: '2-1', nameMn: 'Офицер, ахлагчийн ёслолын малгай (эрэгтэй)', nameEn: 'Officer & Sergeant Ceremonial Visor Cap (Male)', category: 'Headwear' as const, sizes: ['55', '56', '57', '58', '59', '60'] },
+  { uniformId: 'uni-2-51', modelCode: '2-51', nameMn: 'Хээрийн тактикийн хагас түрийтэй гутал', nameEn: 'Tactical Combat Boots', category: 'Footwear' as const, sizes: ['40', '41', '42', '43', '44', '45'] }
+];
+const U310_CONSCRIPT_ITEMS = [
+  { uniformId: 'uni-3-4', modelCode: '3-4, 3-5', nameMn: 'Хугацаат цэргийн хээрийн китель, өмд', nameEn: 'Conscript Field Uniform (Tunic & Trousers)', category: 'Outerwear' as const, sizes: ['44-2', '46-2', '48-3', '50-3', '52-4', '54-4'] },
+  { uniformId: 'uni-3-13', modelCode: '3-13', nameMn: 'Хугацаат цэргийн зуны гутал', nameEn: 'Conscript Summer Boots', category: 'Footwear' as const, sizes: ['39', '40', '41', '42', '43', '44'] }
+];
+
+function u310DateOffset(daysAgo: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return d.toISOString().slice(0, 10);
+}
+function u310ExpiryOf(issueDate: string): string {
+  const d = new Date(issueDate);
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function generateUnit310Roster(count: number) {
+  const personnel: Personnel[] = [];
+  const distributions: DistributionRecord[] = [];
+  const exchanges: ExchangeRecord[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const isFemale = i % 3 === 1;
+    const father = U310_FATHER_MN[i % U310_FATHER_MN.length];
+    const fatherEn = U310_FATHER_EN[i % U310_FATHER_EN.length];
+    const givenMn = isFemale ? U310_GIVEN_FEMALE_MN[i % U310_GIVEN_FEMALE_MN.length] : U310_GIVEN_MALE_MN[i % U310_GIVEN_MALE_MN.length];
+    const givenEn = isFemale ? U310_GIVEN_FEMALE_EN[i % U310_GIVEN_FEMALE_EN.length] : U310_GIVEN_MALE_EN[i % U310_GIVEN_MALE_EN.length];
+
+    let rankSlot: U310RankSlot;
+    if (i % 10 === 0) rankSlot = U310_OFFICER_RANKS[Math.floor(i / 10) % U310_OFFICER_RANKS.length];
+    else if (i % 5 === 0) rankSlot = U310_SERGEANT_RANKS[Math.floor(i / 5) % U310_SERGEANT_RANKS.length];
+    else rankSlot = U310_CONSCRIPT_RANKS[i % U310_CONSCRIPT_RANKS.length];
+
+    const personId = `pers-310-${i + 1}`;
+    const militaryId = `ЗХ-310${String(200 + i).padStart(3, '0')}`;
+    const heightCm = 162 + (i % 22);
+    const itemPool = rankSlot.rankCategory === 'Conscript' ? U310_CONSCRIPT_ITEMS : U310_OFFICER_ITEMS;
+    const item = itemPool[i % itemPool.length];
+    const size = item.sizes[i % item.sizes.length];
+
+    const person: Personnel = {
+      id: personId,
+      militaryId,
+      nameMn: `${father} ${givenMn}`,
+      nameEn: `${givenEn} ${fatherEn}`,
+      departmentId: DEPT_310_ID,
+      departmentName: DEPT_310_NAME,
+      rankId: rankSlot.rankId,
+      rankName: rankSlot.rankName,
+      rankCategory: rankSlot.rankCategory,
+      serviceType: rankSlot.serviceType,
+      gender: isFemale ? 'female' : 'male',
+      phone: `+976 ${9000 + ((i * 53) % 1000)}-${String(1000 + ((i * 91) % 9000)).padStart(4, '0')}`,
+      email: `${givenEn.toLowerCase().replace(/[^a-z-]/g, '')}.${fatherEn.toLowerCase().replace(/[^a-z-]/g, '')}${i}@afm.gov.mn`,
+      enlistedDate: u310DateOffset(200 + i * 6),
+      status: 'active',
+      avatar: isFemale
+        ? '/src/assets/images/mongolian_officer_female_1788134566024.jpg'
+        : rankSlot.rankCategory === 'Officer'
+          ? '/src/assets/images/mongolian_officer_male_1788134546529.jpg'
+          : '/src/assets/images/mongolian_soldier_male_1788134594489.jpg',
+      measurements: {
+        heightCm,
+        chestCm: Math.round(heightCm * 0.54),
+        waistCm: Math.round(heightCm * 0.45),
+        shoeSize: 38 + (i % 8),
+        headCircumferenceCm: 54 + (i % 7),
+        standardUniformSize: size
+      }
+    };
+    personnel.push(person);
+
+    const issueDate = u310DateOffset(10 + (i % 180));
+    const cashPaid = i % 4 === 0;
+    const distId = `dist-310-${i + 1}`;
+    const distNo = `DST-2026-3${String(1000 + i).slice(1)}`;
+    const wasExchanged = i % 5 === 0;
+
+    if (wasExchanged) {
+      const oldSize = item.sizes[(i + 1) % item.sizes.length];
+      const newDistId = `${distId}-ex`;
+      const exchangeDate = u310DateOffset(5 + (i % 90));
+
+      distributions.push(
+        {
+          id: distId,
+          distributionNo: distNo,
+          personnelId: personId,
+          personnelName: person.nameMn,
+          personnelMilitaryId: militaryId,
+          personnelRank: rankSlot.rankName,
+          departmentName: DEPT_310_NAME,
+          uniformId: item.uniformId,
+          uniformModelCode: item.modelCode,
+          uniformNameMn: item.nameMn,
+          uniformNameEn: item.nameEn,
+          category: item.category,
+          size: oldSize,
+          quantity: 1,
+          issueDate,
+          expiryDate: u310ExpiryOf(issueDate),
+          status: 'Exchanged',
+          exchangeReferenceId: newDistId,
+          exchangeReason: 'Size Mismatch',
+          conditionAtIssue: 'Brand New',
+          issuedByOfficer: U310_SUPPLY_OFFICER,
+          notes: 'Хэмжээ таарахгүй байсныг илрүүлж, дараагийн хэмжээгээр сольж олгов.'
+        },
+        {
+          id: newDistId,
+          distributionNo: `${distNo}-EX`,
+          personnelId: personId,
+          personnelName: person.nameMn,
+          personnelMilitaryId: militaryId,
+          personnelRank: rankSlot.rankName,
+          departmentName: DEPT_310_NAME,
+          uniformId: item.uniformId,
+          uniformModelCode: item.modelCode,
+          uniformNameMn: item.nameMn,
+          uniformNameEn: item.nameEn,
+          category: item.category,
+          size,
+          quantity: 1,
+          issueDate: exchangeDate,
+          expiryDate: u310ExpiryOf(exchangeDate),
+          status: 'Issued',
+          conditionAtIssue: 'Standard Issue',
+          issuedByOfficer: U310_SUPPLY_OFFICER,
+          notes: 'Размер сольсны дараах шинэ олголт.',
+          receivedPhysically: !cashPaid
+        }
+      );
+      exchanges.push({
+        id: `exc-310-${i + 1}`,
+        exchangeNo: `EXC-2026-3${String(1000 + i).slice(1)}`,
+        originalDistributionId: distId,
+        newDistributionId: newDistId,
+        personnelId: personId,
+        personnelName: person.nameMn,
+        personnelMilitaryId: militaryId,
+        departmentName: DEPT_310_NAME,
+        uniformId: item.uniformId,
+        uniformModelCode: item.modelCode,
+        uniformName: item.nameMn,
+        oldSize,
+        newSize: size,
+        reason: 'Size Mismatch',
+        notes: 'Ангийн агуулахаас тохирох хэмжээгээр сольж олгов.',
+        exchangeDate,
+        handledByOfficer: U310_SUPPLY_OFFICER
+      });
+    } else {
+      distributions.push({
+        id: distId,
+        distributionNo: distNo,
+        personnelId: personId,
+        personnelName: person.nameMn,
+        personnelMilitaryId: militaryId,
+        personnelRank: rankSlot.rankName,
+        departmentName: DEPT_310_NAME,
+        uniformId: item.uniformId,
+        uniformModelCode: item.modelCode,
+        uniformNameMn: item.nameMn,
+        uniformNameEn: item.nameEn,
+        category: item.category,
+        size,
+        quantity: 1,
+        issueDate,
+        expiryDate: u310ExpiryOf(issueDate),
+        status: 'Issued',
+        conditionAtIssue: i % 7 === 0 ? 'Reserve' : 'Brand New',
+        issuedByOfficer: U310_SUPPLY_OFFICER,
+        notes: cashPaid
+          ? 'Агуулахад тухайн үед тохирох хэмжээ дутсан тул мөнгөн урамшуулал олгов.'
+          : 'Стандарт ээлжит олголт.',
+        receivedPhysically: !cashPaid
+      });
+    }
+  }
+
+  return { personnel, distributions, exchanges };
+}
+
+// Хошууч С.Хонгор (310-р ангийн хангамжийн офицер) — today's 3-item issuance:
+// one paid out as cash equivalent, two received as physical items.
+const khongor: Personnel = {
+  id: 'pers-310-khongor',
+  militaryId: 'ЗХ-310001',
+  nameMn: 'Саранхүүгийн Хонгор',
+  nameEn: 'Khongor Sarankhuu',
+  departmentId: DEPT_310_ID,
+  departmentName: DEPT_310_NAME,
+  rankId: 'rk-maj',
+  rankName: 'Хошууч',
+  rankCategory: 'Officer',
+  gender: 'male',
+  phone: '+976 9911-0310',
+  email: 's.khongor@afm.gov.mn',
+  enlistedDate: '2014-08-01',
+  status: 'active',
+  avatar: '/src/assets/images/mongolian_captain_male_1788134580791.jpg',
+  measurements: {
+    heightCm: 179,
+    chestCm: 104,
+    waistCm: 86,
+    shoeSize: 43,
+    headCircumferenceCm: 58,
+    standardUniformSize: '50-4'
+  }
+};
+
+const khongorIssueDate = u310DateOffset(0);
+const khongorExpiryDate = u310ExpiryOf(khongorIssueDate);
+const khongorDistributions: DistributionRecord[] = [
+  {
+    id: 'dist-310-khongor-1',
+    distributionNo: 'DST-2026-3901',
+    personnelId: khongor.id,
+    personnelName: khongor.nameMn,
+    personnelMilitaryId: khongor.militaryId,
+    personnelRank: khongor.rankName,
+    departmentName: DEPT_310_NAME,
+    uniformId: 'uni-2-1',
+    uniformModelCode: '2-1',
+    uniformNameMn: 'Офицер, ахлагчийн ёслолын малгай (эрэгтэй)',
+    uniformNameEn: 'Officer & Sergeant Ceremonial Visor Cap (Male)',
+    category: 'Headwear',
+    size: '57',
+    quantity: 1,
+    issueDate: khongorIssueDate,
+    expiryDate: khongorExpiryDate,
+    status: 'Issued',
+    conditionAtIssue: 'Brand New',
+    issuedByOfficer: 'Ахмад Б.Мөнхбат (Ангийн туслах хангамжийн офицер)',
+    notes: 'Өнөөдрийн ээлжит олголт.',
+    receivedPhysically: true
+  },
+  {
+    id: 'dist-310-khongor-2',
+    distributionNo: 'DST-2026-3902',
+    personnelId: khongor.id,
+    personnelName: khongor.nameMn,
+    personnelMilitaryId: khongor.militaryId,
+    personnelRank: khongor.rankName,
+    departmentName: DEPT_310_NAME,
+    uniformId: 'uni-2-14',
+    uniformModelCode: '2-14, 2-15',
+    uniformNameMn: 'Офицер, ахлагчийн албаны китель, өмд (эрэгтэй)',
+    uniformNameEn: 'Officer Service Tunic & Trousers',
+    category: 'Outerwear',
+    size: '50-4',
+    quantity: 1,
+    issueDate: khongorIssueDate,
+    expiryDate: khongorExpiryDate,
+    status: 'Issued',
+    conditionAtIssue: 'Brand New',
+    issuedByOfficer: 'Ахмад Б.Мөнхбат (Ангийн туслах хангамжийн офицер)',
+    notes: 'Өнөөдрийн ээлжит олголт.',
+    receivedPhysically: true
+  },
+  {
+    id: 'dist-310-khongor-3',
+    distributionNo: 'DST-2026-3903',
+    personnelId: khongor.id,
+    personnelName: khongor.nameMn,
+    personnelMilitaryId: khongor.militaryId,
+    personnelRank: khongor.rankName,
+    departmentName: DEPT_310_NAME,
+    uniformId: 'uni-2-51',
+    uniformModelCode: '2-51',
+    uniformNameMn: 'Хээрийн тактикийн хагас түрийтэй гутал',
+    uniformNameEn: 'Tactical Combat Boots',
+    category: 'Footwear',
+    size: '43',
+    quantity: 1,
+    issueDate: khongorIssueDate,
+    expiryDate: khongorExpiryDate,
+    status: 'Issued',
+    conditionAtIssue: 'Brand New',
+    issuedByOfficer: 'Ахмад Б.Мөнхбат (Ангийн туслах хангамжийн офицер)',
+    notes: 'Тухайн размерийн гутал агуулахад дутсан тул мөнгөн урамшуулал хэлбэрээр олгов.',
+    receivedPhysically: false
+  }
+];
+
+const unit310Roster = generateUnit310Roster(199);
+
+INITIAL_PERSONNEL.push(khongor, ...unit310Roster.personnel);
+INITIAL_DISTRIBUTIONS.push(...khongorDistributions, ...unit310Roster.distributions);
+INITIAL_EXCHANGES.push(...unit310Roster.exchanges);
+INITIAL_AUDIT_LOGS.push(
+  {
+    id: 'log-310-1',
+    timestamp: `${khongorIssueDate} 09:15:00`,
+    actor: 'Ахмад Б.Мөнхбат',
+    role: 'Хувцас хангалтын офицер',
+    actionMn: 'Хувцас олголт хийгдсэн',
+    actionEn: 'Uniform Issued',
+    category: 'DISTRIBUTION',
+    details: `Хошууч С.Хонгорт (${khongor.militaryId}, 310-р анги) өнөөдөр 3 төрлийн хувцас олгосон: 2 биет байдлаар, 1-ийг мөнгөн урамшуулал хэлбэрээр.`
+  },
+  {
+    id: 'log-310-2',
+    timestamp: `${khongorIssueDate} 08:40:00`,
+    actor: 'Хошууч С.Хонгор',
+    role: 'Дарга',
+    actionMn: 'Ангийн агуулахын үлдэгдэл шалгасан',
+    actionEn: 'Unit Warehouse Stock Reviewed',
+    category: 'INVENTORY',
+    details: '310-р ангийн агуулахад бүх ангиллын дүрэмт хувцасны нөөц хангалттай байгааг баталгаажуулав (200 алба хаагчийн жагсаалттай тулгаж шалгав).'
+  }
+);
