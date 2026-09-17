@@ -1,0 +1,6 @@
+{
+  "name": "Uniform Distribution Management System",
+  "description": "Comprehensive Military Uniform Distribution & Inventory Management System for officers, tracking uniforms, personnel profiles, distributions, exchanges, expiry alerts, and department analytics based on official military uniform standards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

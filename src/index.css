@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  /* Prompt Blue — primary dark surface palette */
+  --color-teal-950: #06091A;
+  --color-teal-900: #0B132B;
+  --color-teal-850: #0F1935;
+  --color-teal-800: #131F3E;
+  --color-teal-750: #172448;
+  --color-teal-700: #1B2A52;
+  --color-teal-600: #22335F;
+  --color-teal-500: #2C4070;
+  --color-teal-400: #3A5185;
+
+  /* AI Green — primary accent palette */
+  --color-foam-50: #F0FFF7;
+  --color-foam-100: #D6FFEA;
+  --color-foam-200: #A8FFD1;
+  --color-foam-300: #39FF88;
+  --color-foam-400: #2ED975;
+  --color-foam-500: #22A85C;
+  --color-foam-600: #7ECDA0;
+}
+
+/* Supply-flow connector lines — used on the homepage org chart to visually
+   suggest uniforms/supply branching out and flowing down from ЗХЖШ into
+   each Командлал along the curved SVG paths. */
+@keyframes flow-dash {
+  to { stroke-dashoffset: -24; }
+}
+.flow-path {
+  stroke-dasharray: 10 14;
+  animation: flow-dash 0.6s linear infinite;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  nav, header, aside, .print\:hidden {
+    display: none !important;
+  }
+
+  #department-report-print-canvas,
+  #printable-slip-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+}
