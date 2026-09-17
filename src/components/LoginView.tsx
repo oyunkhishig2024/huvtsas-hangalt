@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { Shield, Lock, User, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useUniformData } from '../context/UniformDataContext';
 import { DEMO_CREDENTIALS, DEMO_PASSWORD, findCredential, DemoCredential } from '../data/credentials';
@@ -11,6 +12,7 @@ interface LoginViewProps {
 
 export const LoginView: React.FC<LoginViewProps> = ({ hintUsername, onSuccess, onCancel }) => {
   const { setSession } = useUniformData();
+  const reduceMotion = useReducedMotion();
   const [username, setUsername] = useState(hintUsername || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -45,14 +47,29 @@ export const LoginView: React.FC<LoginViewProps> = ({ hintUsername, onSuccess, o
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-teal-950">
-      <div className="w-full max-w-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="w-full max-w-sm"
+      >
         <button onClick={onCancel} className="flex items-center gap-1.5 text-foam-600 hover:text-foam-300 text-xs mb-6 transition">
           <ArrowLeft className="w-3.5 h-3.5" /> Нүүр хуудас руу буцах
         </button>
 
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-full bg-teal-900 border border-teal-700 flex items-center justify-center mb-3">
-            <Shield className="w-6 h-6 text-foam-300" />
+          <div className="relative flex items-center justify-center mb-3">
+            {!reduceMotion && (
+              <motion.span
+                aria-hidden
+                className="absolute h-14 w-14 rounded-full border-2 border-foam-300/50"
+                animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
+              />
+            )}
+            <div className="relative w-14 h-14 rounded-full bg-teal-900 border border-teal-700 flex items-center justify-center">
+              <Shield className="w-6 h-6 text-foam-300" />
+            </div>
           </div>
           <div className="text-foam-100 font-semibold text-lg">Системд нэвтрэх</div>
           <div className="text-foam-600 text-xs mt-1">UDMS — Дүрэмт хувцасны удирдлагын систем</div>
@@ -92,7 +109,19 @@ export const LoginView: React.FC<LoginViewProps> = ({ hintUsername, onSuccess, o
             </div>
           </div>
 
-          {error && <div className="text-rose-400 text-xs">{error}</div>}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="text-rose-400 text-xs"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <button
             type="submit"
@@ -157,7 +186,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ hintUsername, onSuccess, o
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

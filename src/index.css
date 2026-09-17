@@ -35,6 +35,29 @@
   animation: flow-dash 0.6s linear infinite;
 }
 
+/* Home screen ambient — a faint tactical grid + slow radar sweep behind the
+   ЗХЖШ→Командлал→Анги org chart, reinforcing the "live network" framing. */
+@keyframes radar-spin {
+  to { transform: rotate(360deg); }
+}
+.bg-tactical-grid {
+  background-image:
+    linear-gradient(rgba(57, 255, 136, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 136, 0.06) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 0%, transparent 75%);
+}
+.bg-radar-sweep {
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(57, 255, 136, 0.18) 16deg, transparent 60deg, transparent 360deg);
+  animation: radar-spin 12s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-radar-sweep {
+    animation: none;
+  }
+}
+
 @media print {
   @page {
     size: A4 portrait;
