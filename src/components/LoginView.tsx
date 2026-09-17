@@ -63,8 +63,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ hintUsername, onSuccess, o
               <motion.span
                 aria-hidden
                 className="absolute h-14 w-14 rounded-full border-2 border-foam-300/50"
-                animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeOut' }}
+                animate={{ scale: [1, 1.45], opacity: [0.55, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
               />
             )}
             <div className="relative w-14 h-14 rounded-full bg-teal-900 border border-teal-700 flex items-center justify-center">

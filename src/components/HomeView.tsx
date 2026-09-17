@@ -85,8 +85,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectUnit, onGoHQ, onSele
           <motion.span
             aria-hidden
             className="absolute h-32 w-32 rounded-full border-2 border-foam-300/50 sm:h-36 sm:w-36"
-            animate={{ scale: [1, 1.22, 1], opacity: [0.55, 0, 0.55] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
+            animate={{ scale: [1, 1.35], opacity: [0.6, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
           />
         )}
         <motion.button
